@@ -10,8 +10,8 @@ The repository contains all source code for training and evaluate  malware detec
 1. Clone the repository to your local.
 `git clone https://github.com/tamnguyenvan/malnet`
 2. Install all requirements (use **virtualenv** is recommneded). Note: It just works on Python 3.6 (maybe 3.5 but I haven't tested).
-`pip install tensorflow==1.2.0` (CPU only) or `pip install tensorflow-gpu==1.2.0` (GPU)
-`pip install -r requirements`
+- `pip install tensorflow==1.2.0` (CPU only) or `pip install tensorflow-gpu==1.2.0` (GPU)
+- `pip install -r requirements`
 3. Make data directory. For example, make a direcotory called **data** in the root project directory. The data can be found at https://adfad. After downloading, extract it and put all data files into the data directory.
 # Training
 If you have accomplished the installation step correctly, almost done. We just need run `python train.py` for training with default parameters.
@@ -27,9 +27,10 @@ After training, the model will be saved in **result/checkpoint**. We can evaluat
 - `model.json` Model graph.
 - `scaler.pkl` Pickle binary file contains an object for preprocessing scaler.
 
-In order to evaluating, just run `python src/eval.py`.
+In order to evaluating, just run `python eval.py`.
 # Deployment
-In this section, we will try to use the model to predict samples from the real. We provided a script for this in **src/test.py**. So all we need to do is just run `python src/test.py --input [path/to/sample/file]`.
+In this section, we will try to use the model to predict samples from the real. We provided a script for this in **src/test.py**. So all we need to do is just run `python test.py --input [path/to/sample/file]`.
 # Contact
-Tam Nguyen Van (tamvannguyen200795@gmail.com)
+Tam Nguyen Van (tamvannguyen200795@gmail.com).
+
 Any questions can be left as issues in this repository. You're are welcome all.
