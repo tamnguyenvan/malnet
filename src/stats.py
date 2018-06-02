@@ -1,6 +1,11 @@
 # stats.py
 
 """
+- Author: tamnv
+- Description: This script process some statistics on input
+data for further understanding about the EMBER dataset.
+
+Usage: python stats.py --data-dir [path/to/dataset/dir]
 """
 
 import os
@@ -36,7 +41,6 @@ X_train = X_train[y_train != -1]
 
 k = 5
 indices = random.sample(list(range(X_train.shape[1])), k)
-indices = [1978, 1329, 362, 1751, 829]
 select_train = X_train[:, indices]
 
 # Statistics

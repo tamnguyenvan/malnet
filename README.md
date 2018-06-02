@@ -22,7 +22,7 @@ Some options:
 
 Please see source code for more details.
 # Evaluate
-After training, the model will be saved in **result/checkpoint**. We can evaluate this or use my pretrained model that can be found at [here](https://drive.google.com/file/d/1zD99s0L9l1eVPmSo9o6c3WgkZrpa2e2o). The directory must contain 3 files:
+The training script also had evaluation step. But, we still provide other script for evaluating independently. After training, the model will be saved in **result/checkpoint**. We can evaluate this or use my pretrained model that can be found at [here](https://drive.google.com/file/d/1zD99s0L9l1eVPmSo9o6c3WgkZrpa2e2o). The directory must contain 3 files:
 - `model.h5` Model weights.
 - `model.json` Model graph.
 - `scaler.pkl` Pickle binary file contains an object for preprocessing scaler.

@@ -1,7 +1,16 @@
 # train.py
 
 """
+- Author: tamnv
+- Description: This script contains the entire training pipeline
+of MalNet: The processing was followed steps:
+vectorized data -> build model -> training -> evaluate ->
+save model -> summary.
+
+Usage: python train.py [--model all|malnet|et|rt]
+[--batch-size BATCH_SIZE] [--epochs EPOCHS]
 """
+
 import argparse
 import numpy as np
 import os

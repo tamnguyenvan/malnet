@@ -1,8 +1,16 @@
 # util.py
 
 """
+- Author: tamnv
+- Description: This module just contains utility functions
+for the training script.
+Metrics class will be used to add validation measurements
+during training.
+TrainValTensorBoard class for summary during training.
 """
+
 import os
+import glob
 import tensorflow as tf
 import numpy as np
 from sklearn.metrics import confusion_matrix, f1_score
@@ -68,3 +76,19 @@ class TrainValTensorBoard(TensorBoard):
     def on_train_end(self, logs=None):
         super(TrainValTensorBoard, self).on_train_end(logs)
         self.val_writer.close()
+
+
+def get_paths(model_dir):
+    """Helper function to get all model paths."""
+    path_dict = dict()
+    for root, _, filenames in os.walk(model_dir):
+        for filename in filenames:
+            path = os.path.join(root, filename)
+            ext = os.path.splitext(filename)[-1]
+            if ext == '.json':
+                path_dict['graph'] = path
+            elif ext == '.h5':
+                path_dict['model'] = path
+            elif ext == '.pkl':
+                path_dict['scaler'] = path
+    return path_dict
