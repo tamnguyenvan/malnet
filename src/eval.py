@@ -30,7 +30,7 @@ def parse_arguments(argv):
     parser = argparse.ArgumentParser(prog='MalNet')
     parser.add_argument('--data-dir', dest='data_dir', type=str,
                         help='Path to data directory contains test dataset.')
-    parser.add_argument('--model', dest='model', type=str,
+    parser.add_argument('--model', dest='model_dir', type=str,
                         help='Path to model directory.')
     return parser.parse_args(argv)
 
@@ -48,8 +48,6 @@ X_test = X_test[y_test != -1]
 y_test = y_test[y_test != -1]
 
 model_dir = args.model_dir
-path_dict = get_paths(model_dir)
-model_dir = args.model
 path_dict = get_paths(model_dir)
 json_file = open(path_dict['graph'], 'r')
 loaded_model_json = json_file.read()
