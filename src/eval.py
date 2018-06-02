@@ -28,9 +28,6 @@ from sklearn.metrics import roc_curve, auc
 def parse_arguments(argv):
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(prog='MalNet')
-    parser.add_argument('-m', '--model', dest='model', type=str, default='malnet',
-                        help='Model will be used. The following params are avaible: '
-                        'malnet, et, rf, all.')
     parser.add_argument('--data-dir', dest='data_dir', type=str,
                         help='Path to data directory contains test dataset.')
     parser.add_argument('--model', dest='model', type=str,
