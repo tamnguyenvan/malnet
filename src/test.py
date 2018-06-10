@@ -27,7 +27,7 @@ def parse_arguments(argv):
                         help='Path to PE file.')
     parser.add_argument('--model', dest='model', type=str,
                         help='Path to model directory.')
-    parser.add_argument('--threshold', dest='threshold', type=float, default=0.466,
+    parser.add_argument('--threshold', dest='threshold', type=float, default=0.273,
                         help='Threshold to distinguish benign and malicous.')
     return parser.parse_args(argv)
 

@@ -23,6 +23,8 @@ def parse_arguments(argv):
     parser = argparse.ArgumentParser(prog='MalNet')
     parser.add_argument('-d', '--data-dir', dest='data_dir', type=str, default='data',
                         help='Directory that stores our dataset.')
+    parser.add_argument('--scale', dest='scale', type=float, default=1.,
+                        help='Scale of training/test dataset.')
     return parser.parse_args(argv)
 
 
@@ -31,7 +33,7 @@ root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 data_dir = os.path.join(root_dir, args.data_dir)
 
 print('Loading data...')
-X_train, y_train, _, _ = ember.read_vectorized_features(data_dir)
+X_train, y_train, _, _ = ember.read_vectorized_features(data_dir, scale=args.scale)
 X_train = np.array(X_train)
 
 
@@ -49,6 +51,9 @@ min_train = np.min(select_train, axis=0)
 mean_train = np.mean(select_train, axis=0)
 std_train = np.std(select_train, axis=0)
 
+print('Index: {}'.format(indices))
+
+print('')
 print('Max: {}'.format(max_train))
 print('Min: {}'.format(min_train))
 print('Mean: {}'.format(mean_train))
