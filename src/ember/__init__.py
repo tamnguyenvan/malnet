@@ -74,7 +74,7 @@ def create_vectorized_features(data_dir, scale=1.):
     X_path = os.path.join(data_dir, "X_test.dat")
     y_path = os.path.join(data_dir, "y_test.dat")
     raw_feature_paths = [os.path.join(data_dir, "test_features.jsonl")]
-    vectorize_subset(X_path, y_path, raw_feature_paths, int(scale * 20000))
+    vectorize_subset(X_path, y_path, raw_feature_paths, int(scale * 200000))
 
 
 def read_vectorized_features(data_dir, subset=None, scale=1.):
@@ -101,8 +101,8 @@ def read_vectorized_features(data_dir, subset=None, scale=1.):
     if subset is None or subset == "train":
         X_test_path = os.path.join(data_dir, "X_test.dat")
         y_test_path = os.path.join(data_dir, "y_test.dat")
-        X_test = np.memmap(X_test_path, dtype=np.float32, mode="r", shape=(int(scale * 20000), ndim))
-        y_test = np.memmap(y_test_path, dtype=np.float32, mode="r", shape=int(scale * 20000))
+        X_test = np.memmap(X_test_path, dtype=np.float32, mode="r", shape=(int(scale * 200000), ndim))
+        y_test = np.memmap(y_test_path, dtype=np.float32, mode="r", shape=int(scale * 200000))
         if subset == "test":
             return X_test, y_test
 
