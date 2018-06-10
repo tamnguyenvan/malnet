@@ -289,6 +289,7 @@ fpr = np.log10(fpr[fpr > 5e-5])
 plt.plot(fpr, tpr, color='black')
 
 idx = np.argmin(np.abs(fpr + 3.))
+
 print('Threshold: %.4f FPR: %.4f Detection rate: %.4f' %
     (thresholds[idx] if thresholds[idx] <= 1.0 else 1.0, np.power(10, fpr[idx]), tpr[idx]))
 plt.plot([np.min(fpr) - 5, fpr[idx]], [tpr[idx], tpr[idx]], color='red', linestyle='--')
@@ -301,6 +302,7 @@ print('Threshold: %.4f FPR: %.4f Detection rate: %.4f' %
 idx = np.argmin(np.abs(fpr + 1.))
 print('Threshold: %.4f FPR: %.4f Detection rate: %.4f' %
     (thresholds[idx] if thresholds[idx] <= 1.0 else 1.0, np.power(10, fpr[idx]), tpr[idx]))
+
 
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
