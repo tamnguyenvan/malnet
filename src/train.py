@@ -56,6 +56,8 @@ def parse_arguments(argv):
                         help='Number of epochs.')
     parser.add_argument('-v', '--visual', dest='visual', type=str, default='visualization',
                         help='Directory to save visualization.')
+    parser.add_argument('--scale', dest='scale', type=float, default=1.,
+                        help='Scale of training/test dataset.')
     return parser.parse_args(argv)
 
 
@@ -82,7 +84,7 @@ if not os.path.exists(result_dir):
 # Generate dummy data
 print('Loading data...')
 data_dir = os.path.join(root_dir, args.data_dir)
-X_train, y_train, X_test, y_test = ember.read_vectorized_features(data_dir)
+X_train, y_train, X_test, y_test = ember.read_vectorized_features(data_dir, scale=args.scale)
 X_train = np.array(X_train)
 X_test = np.array(X_test)
 
@@ -249,7 +251,7 @@ if args.model == 'rf' or args.model == 'all':
 # Summary results
 for m, metrics in result_dict.items():
     fpr, tpr, threshold, acc = metrics
-    print('Accuracy of %s: %.4f' % (m, acc))
+    print('Accuracy on test of %s: %.4f' % (m, acc))
     print('AUC of %s: %.4f' % (m, auc(fpr, tpr)))
     print('')
     plt.plot(fpr, tpr)
@@ -279,23 +281,31 @@ plt.savefig(os.path.join(visual_dir, 'roc_zoom.png'))
 plt.close()
 
 
-# Log scale
-fpr, tpr, thresholds, acc = result_dict['malnet']
+# Log scale of ROC curve
+fpr, tpr, thresholds, _ = result_dict['malnet']
 tpr = tpr[fpr > 5e-5]
+thresholds = thresholds[fpr > 5e-5]
 fpr = np.log10(fpr[fpr > 5e-5])
 plt.plot(fpr, tpr, color='black')
+
 idx = np.argmin(np.abs(fpr + 3.))
-print('Threshold: %.3f FPR: %.2f Detection rate: %.2f' % (thresholds[idx], 1e-3, tpr[idx]))
-plt.plot([np.min(fpr) - 1, fpr[idx]], [tpr[idx], tpr[idx]], color='red', linestyle='--')
+print('Threshold: %.4f FPR: %.4f Detection rate: %.4f' %
+    (thresholds[idx] if thresholds[idx] <= 1.0 else 1.0, np.power(10, fpr[idx]), tpr[idx]))
+plt.plot([np.min(fpr) - 5, fpr[idx]], [tpr[idx], tpr[idx]], color='red', linestyle='--')
 plt.plot([fpr[idx], fpr[idx]], [tpr[idx], 0], color='red', linestyle='--')
 
 idx = np.argmin(np.abs(fpr + 2.))
-print('Threshold: %.3f FPR: %.3f Detection rate: %.2f' % (thresholds[idx],np.power(10, fpr[idx]), tpr[idx]))
+print('Threshold: %.4f FPR: %.4f Detection rate: %.4f' %
+    (thresholds[idx] if thresholds[idx] <= 1.0 else 1.0, np.power(10, fpr[idx]), tpr[idx]))
+
+idx = np.argmin(np.abs(fpr + 1.))
+print('Threshold: %.4f FPR: %.4f Detection rate: %.4f' %
+    (thresholds[idx] if thresholds[idx] <= 1.0 else 1.0, np.power(10, fpr[idx]), tpr[idx]))
 
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
 plt.xlim([np.min(fpr), 0.])
-plt.ylim([0.65, 1.01])
+plt.ylim([0.65 if args.scale == 1. else 0., 1.01])
 plt.xticks([-4, -3, -2, -1, 0], [r'$10^{{-4}}$', r'$10^{{-3}}$', r'$10^{{-2}}$', r'$10^{{-1}}$', r'$10^{{0}}$'])
 plt.grid(True)
 plt.title('MalNet ROC Curve')

@@ -55,12 +55,12 @@ def vectorize_subset(X_path, y_path, raw_feature_paths, nrows):
     # Distribute the vectorization work
     pool = multiprocessing.Pool()
     argument_iterator = ((irow, raw_features_string, X_path, y_path, nrows)
-                         for irow, raw_features_string in enumerate(raw_feature_iterator(raw_feature_paths)))
+                         for irow, raw_features_string in enumerate(raw_feature_iterator(raw_feature_paths)) if irow < nrows)
     for _ in tqdm.tqdm(pool.imap_unordered(vectorize_unpack, argument_iterator), total=nrows):
         pass
 
 
-def create_vectorized_features(data_dir):
+def create_vectorized_features(data_dir, scale=1.):
     """
     Create feature vectors from raw features and write them to disk
     """
@@ -68,16 +68,16 @@ def create_vectorized_features(data_dir):
     X_path = os.path.join(data_dir, "X_train.dat")
     y_path = os.path.join(data_dir, "y_train.dat")
     raw_feature_paths = [os.path.join(data_dir, "train_features_{}.jsonl".format(i)) for i in range(6)]
-    vectorize_subset(X_path, y_path, raw_feature_paths, 900000)
+    vectorize_subset(X_path, y_path, raw_feature_paths, int(scale * 900000))
 
     print("Vectorizing test set")
     X_path = os.path.join(data_dir, "X_test.dat")
     y_path = os.path.join(data_dir, "y_test.dat")
     raw_feature_paths = [os.path.join(data_dir, "test_features.jsonl")]
-    vectorize_subset(X_path, y_path, raw_feature_paths, 200000)
+    vectorize_subset(X_path, y_path, raw_feature_paths, int(scale * 20000))
 
 
-def read_vectorized_features(data_dir, subset=None):
+def read_vectorized_features(data_dir, subset=None, scale=1.):
     """
     Read vectorized features into memory mapped numpy arrays
     """
@@ -93,16 +93,16 @@ def read_vectorized_features(data_dir, subset=None):
     if subset is None or subset == "train":
         X_train_path = os.path.join(data_dir, "X_train.dat")
         y_train_path = os.path.join(data_dir, "y_train.dat")
-        X_train = np.memmap(X_train_path, dtype=np.float32, mode="r", shape=(900000, ndim))
-        y_train = np.memmap(y_train_path, dtype=np.float32, mode="r", shape=900000)
+        X_train = np.memmap(X_train_path, dtype=np.float32, mode="r", shape=(int(scale * 900000), ndim))
+        y_train = np.memmap(y_train_path, dtype=np.float32, mode="r", shape=int(scale * 900000))
         if subset == "train":
             return X_train, y_train
 
     if subset is None or subset == "train":
         X_test_path = os.path.join(data_dir, "X_test.dat")
         y_test_path = os.path.join(data_dir, "y_test.dat")
-        X_test = np.memmap(X_test_path, dtype=np.float32, mode="r", shape=(200000, ndim))
-        y_test = np.memmap(y_test_path, dtype=np.float32, mode="r", shape=200000)
+        X_test = np.memmap(X_test_path, dtype=np.float32, mode="r", shape=(int(scale * 20000), ndim))
+        y_test = np.memmap(y_test_path, dtype=np.float32, mode="r", shape=int(scale * 20000))
         if subset == "test":
             return X_test, y_test
 

@@ -28,10 +28,12 @@ from sklearn.metrics import roc_curve, auc
 def parse_arguments(argv):
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(prog='MalNet')
-    parser.add_argument('--data-dir', dest='data_dir', type=str,
+    parser.add_argument('--data-dir', dest='data_dir', type=str, default='data',
                         help='Path to data directory contains test dataset.')
     parser.add_argument('--model', dest='model_dir', type=str,
                         help='Path to model directory.')
+    parser.add_argument('--scale', dest='scale', type=float, default=1.,
+                        help='Scale of training/test dataset.')
     return parser.parse_args(argv)
 
 
@@ -41,7 +43,7 @@ args = parse_arguments(argv[1:])
 # Generate dummy data
 print('Loading data...')
 data_dir = args.data_dir
-_, _, X_test, y_test = ember.read_vectorized_features(data_dir)
+_, _, X_test, y_test = ember.read_vectorized_features(data_dir, scale=args.scale)
 X_test = np.array(X_test)
 
 X_test = X_test[y_test != -1]
