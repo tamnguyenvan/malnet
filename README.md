@@ -1,35 +1,28 @@
 # MalNet - Detect malware using Convolutional Neural Networks
 By Tam Nguyen Van
 # Introduction
-The repository contains all source code for training and evaluate  malware detection with **MalNet**.
+Malware detection using Convolutional Neural Networks.
 # Requirements
-1. Python 3.6
-2. Keras (2.0.8)
-3. Tensorflow (1.2.0)
+1. Python >=3
+2. Keras (>=2.0.8)
+3. Tensorflow (>=1.15)
 # Installation
 1. Clone the repository to your local.
 `git clone https://github.com/tamnguyenvan/malnet`
-2. Install all requirements (use **virtualenv** is recommneded). Note: It just works on Python 3.6 (maybe 3.5 but I haven't tested).
-- `pip install tensorflow==1.2.0` (CPU only) or `pip install tensorflow-gpu==1.2.0` (GPU)
+2. Install all requirements (**virtualenv** is recommneded).
+- `pip install tensorflow==1.15` (CPU only) or `pip install tensorflow-gpu==1.15` (GPU)
 - `pip install -r requirements.txt`
-3. Make data directory. For example, make a direcotory called **data** in the root project directory. The data can be found at [here](https://drive.google.com/drive/folders/1zUXAb7JnwOiBtfBheQI6LDFu4EG_XZ-_). After downloading, extract it and put all data files into the data directory.
-# Training
-If you have accomplished the installation step correctly, almost done. We just need run `python train.py` for training with default parameters.
-Some options:
-- `--model` Use specific model. For now, just `malnet`, `et` and `rt` are available.
-- `--batch-size` Set batch size to fit our memory. Default is 32.
-- `--epochs` Number of epochs will be trained. Default is 5.
+3. Download Ember dataset [here](https://pubdata.endgame.com/ember/ember_dataset_2018_2.tar.bz2). You can go to their [home page](https://github.com/endgameinc/ember) for more details. Extract to wherever you like.
+4. Extract features by running: `python create_data.py --data_dir PATH_TO_DATA_DIR`. See `create_data.py` for the details. After that, some `.dat` file should be created in the same directory.
+# Training model
+Almost done, just run `python train.py --data_dir PATH_TO_DATA_DIR` for training. Show help to see additional options.
 
-Please see source code for more details.
-# Evaluate
-The training script also had evaluation step. But, we still provide other script for evaluating independently. After training, the model will be saved in **result/checkpoint**. We can evaluate this or use my pretrained model that can be found at [here](https://drive.google.com/file/d/1zD99s0L9l1eVPmSo9o6c3WgkZrpa2e2o). The directory must contain 3 files:
-- `model.h5` Model weights.
-- `model.json` Model graph.
-- `scaler.pkl` Pickle binary file contains an object for preprocessing scaler.
+# Evaluate model
+In case you want to regenerate validation result, run `python eval.py --data_dir PATH_TO_DATA_DIR--model_path MODEL_PATH --scaler_path SCALER_PATH`. Again, show help to see options.
 
-In order to evaluating, just run `python src/eval.py`.
-# Deployment
-In this section, we will try to use the model to predict samples from the real. We provided a script for this in **src/test.py**. So all we need to do is just run `python src/test.py --input [path/to/sample/file]`.
+# Deploy
+Let's have some fun. We will try the pretrained model on real PE files. Download your PE file then run `python test.py --input_file INPUT_FILE --model_path MODEL_PATH`.
+
 # Contact
 Tam Nguyen Van (tamvannguyen200795@gmail.com)
 Any questions can be left as issues in this repository. You're are welcome all.
