@@ -1,11 +1,7 @@
-# test.py
+"""Using pretrained model to predict some real examples to demonstrate it works.
 
+Usage: python test.py --input_file PE_FILE --model_path MODEL_PATH
 """
-- Author: tamnv
-- Description: Use pretrained model to predict some examples
-in real to demonstrate its performance.
-"""
-
 import os
 import glob
 import json
@@ -14,28 +10,37 @@ import pickle as pkl
 from sys import argv
 
 import numpy as np
-from keras.models import model_from_json
+import keras
+import tensorflow as tf
+from keras.models import load_model
 
 import ember
-from util import get_paths
 
+# Fix tensorflow bug on rtx card
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True
+keras.backend.set_session(tf.Session(config=config))
 
 def parse_arguments(argv):
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(prog='MalNet')
-    parser.add_argument('-i', '--input', dest='input', type=str,
+    parser.add_argument('--input_file', dest='input_file', type=str,
                         help='Path to PE file.')
-    parser.add_argument('--model', dest='model', type=str,
+    parser.add_argument('--model_path', dest='model_path', type=str,
                         help='Path to model directory.')
+    parser.add_argument('--scaler_path', dest='scaler_path', type=str,
+                        help='Path to the scaler object file.')
     parser.add_argument('--threshold', dest='threshold', type=float, default=0.273,
                         help='Threshold to distinguish benign and malicous.')
     return parser.parse_args(argv)
 
 # Parse args
 args = parse_arguments(argv[1:])
-input_file = args.input
+input_file = args.input_file
+model_path = args.model_path
+
 print('Example: %s' % input_file)
-print('Model dir: %s' % args.model)
+print('Model path: %s' % args.model_path)
 print('Threshold: %f' % args.threshold)
 
 # Extract features from PE file
@@ -45,16 +50,11 @@ with open(input_file, 'rb') as f:
 feature = np.array(extractor.feature_vector(raw_bytes), dtype=np.float32)
 
 # Load model and predict
-print('Loading model...')
-model_dir = args.model
-path_dict = get_paths(model_dir)
-json_file = open(path_dict['graph'], 'r')
-loaded_model_json = json_file.read()
-json_file.close()
-model = model_from_json(loaded_model_json)
-model.load_weights(path_dict['model'])
-with open(path_dict['scaler'], 'rb') as f:
+print('Loading model from {}'.format(model_path))
+scaler_path = args.scaler_path
+with open(scaler_path, 'rb') as f:
     scaler = pkl.load(f)
+model = load_model(model_path)
 
 features = np.array([feature], dtype=np.float32)
 features = scaler.transform(features)

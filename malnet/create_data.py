@@ -1,5 +1,3 @@
-# preprocess.py
-
 """
 - Author: tamnv
 - Description: This script will extract raw data from EMBER
